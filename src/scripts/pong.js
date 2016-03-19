@@ -66,6 +66,12 @@ function resetBall() {
   ball.vel.y = 0;
 }
 
+function returnBall() {
+  ball.vel.x *= -1;
+  ball.vel.y += -0.2 + Math.random() * 0.4;
+  ball.vel.length(ball.speed);
+}
+
 function startBall() {
   if (ball.vel.x === 0 && ball.vel.y === 0) {
     ball.vel.x = -1 + Math.random() * 2;
@@ -111,12 +117,6 @@ function updateBall(dt) {
 
   ball.pos.x += ball.vel.x * dt;
   ball.pos.y += ball.vel.y * dt;
-}
-
-function returnBall() {
-  ball.vel.x *= -1;
-  ball.vel.y += -0.2 + Math.random() * 0.4;
-  ball.vel.length(ball.speed);
 }
 
 function isBallCaughtY(p, b) {
