@@ -53,7 +53,11 @@ function drawSquare(ent) {
 }
 
 function loop(t) {
-  update(16);
+  accumulator += t - time;
+  while (accumulator >= step) {
+    update(step);
+    accumulator -= step;
+  }
   draw();
   time = t;
   requestAnimationFrame(loop);
@@ -135,8 +139,9 @@ function updateCanvas() {
 
 var canvas = document.getElementsByTagName('canvas')[0];
 var context = canvas.getContext('2d');
-var deltaTime = 0;
+var accumulator = 0;
 var time = 0;
+var step = 4;
 var court = new Vec2(600, 340);
 var scale = new Vec2(1, 1);
 var margin = new Vec2(20, 0);
