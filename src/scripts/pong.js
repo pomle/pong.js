@@ -68,11 +68,13 @@ function resetBall() {
   ball.pos.y = court.y / 2 - ball.size.y / 2;
   ball.vel.x = 0;
   ball.vel.y = 0;
+  ball.speed = .5;
 }
 
 function returnBall() {
   ball.vel.x *= -1;
   ball.vel.y += -0.2 + Math.random() * 0.4;
+  ball.speed *= 1.02;
   ball.vel.length(ball.speed);
 }
 
@@ -150,7 +152,6 @@ var players = [
   new Player(),
 ];
 var ball = new Ball();
-var returnMultiplier = 1;
 
 players[0].pos.x = margin.x;
 players[1].pos.x = court.x - (players[1].size.x + margin.x);
