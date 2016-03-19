@@ -43,11 +43,6 @@ function draw() {
   context.fillRect(0, 0, canvas.width, canvas.height);
   players.forEach(drawSquare);
   drawSquare(ball);
-  drawScore();
-}
-
-function drawScore() {
-
 }
 
 function drawSquare(ent) {
