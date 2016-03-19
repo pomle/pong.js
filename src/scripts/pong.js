@@ -60,8 +60,8 @@ function loop(t) {
 }
 
 function resetBall() {
-  ball.pos.x = 300;
-  ball.pos.y = 200;
+  ball.pos.x = court.x / 2 - ball.size.x / 2;
+  ball.pos.y = court.y / 2 - ball.size.y / 2;
   ball.vel.x = 0;
   ball.vel.y = 0;
 }
