@@ -20,17 +20,12 @@ const server = ws.createServer(function (conn) {
 const sessions = {};
 
 function Session() {
-  this.active = undefined;
   this.id = shortid.generate();
   this.players = [
     new Player(),
     new Player(),
   ];
   this.ball = new Ball();
-}
-
-Session.prototype.touch = function() {
-  this.active = Date.now();
 }
 
 function Ball() {
@@ -51,7 +46,6 @@ function Player() {
 function messageHandler(conn, msg) {
   if (msg.type === 'register') {
     let session = new Session();
-    session.touch();
     session.players[0].conn = conn;
     sessions[session.id] = session;
     console.log('Player 1 hosting session %s', session.id);
