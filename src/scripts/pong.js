@@ -152,7 +152,7 @@ function updateScale() {
 
 function updateCanvas() {
   canvas.width = document.body.clientWidth;
-  canvas.height = document.body.clientHeight;
+  canvas.height = canvas.width * (court.y / court.x);
 }
 
 function sendMessage(name, data) {
