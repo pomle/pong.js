@@ -191,9 +191,8 @@ connection.addEventListener('error', function(e) {
   console.error(e);
 });
 connection.addEventListener('open', function(e) {
-  var s = parseInt(window.location.hash[1], 10);
-  if (s) {
-    session = s;
+  session = window.location.hash.split('#')[1];
+  if (session) {
     sendMessage('join');
     player = 1;
   } else {

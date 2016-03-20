@@ -1,6 +1,7 @@
 'use strict';
 
 const ws = require("nodejs-websocket")
+const shortid = require("shortid")
 
 const server = ws.createServer(function (conn) {
   console.log("New connection");
@@ -17,10 +18,10 @@ const server = ws.createServer(function (conn) {
 }).listen(8001);
 
 const sessions = {};
-let count = 0;
 
 function Session() {
   this.active = undefined;
+  this.id = shortid.generate();
   this.players = [
     new Player(),
     new Player(),
@@ -49,27 +50,22 @@ function Player() {
 
 function messageHandler(conn, msg) {
   if (msg.type === 'register') {
-    count++;
     let session = new Session();
     session.touch();
     session.players[0].conn = conn;
-    sessions[count] = session;
-    console.log('Player %s hosting session %s', 1, count);
-    sendMessage(conn, 'session', count);
+    sessions[session.id] = session;
+    console.log('Player 1 hosting session %s', session.id);
+    sendMessage(conn, 'session', session.id);
   }
   else {
     let session = sessions[msg.session];
-    if (!session) {
-      return;
-    }
-    session.touch();
     if (session === undefined) {
       console.info('Unknown session %d', msg.session);
       return;
     }
     if (msg.type === 'join') {
       session.players[1].conn = conn;
-      console.log('Player %s joined session %s', 2, msg.session);
+      console.log('Player 2 joined session %s', session.id);
     }
     else if (msg.type === 'pos') {
       let p;
