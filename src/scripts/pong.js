@@ -186,7 +186,7 @@ players[1].pos.x = court.x - (players[1].size.x + margin.x);
 
 resetBall();
 
-var connection = new WebSocket('ws://192.168.1.10:8001');
+var connection = new WebSocket('ws://' + window.location.hostname + ':8001');
 connection.addEventListener('error', function(e) {
   console.error(e);
 });
