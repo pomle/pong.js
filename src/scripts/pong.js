@@ -58,6 +58,7 @@ function loop(t) {
     update(step);
     accumulator -= step;
   }
+  sendNet();
   draw();
   time = t;
   requestAnimationFrame(loop);
@@ -69,6 +70,7 @@ function resetBall() {
   ball.vel.x = 0;
   ball.vel.y = 0;
   ball.speed = .5;
+  sendMessage('ball', ball.pos);
 }
 
 function returnBall() {
@@ -86,13 +88,27 @@ function startBall() {
   }
 }
 
+function sendNet() {
+  if (session && player === 0) {
+    if (ball.vel.x !== 0 && ball.vel.y !== 0) {
+      sendMessage('ball', ball.pos);
+    }
+  }
+}
+
 function update(dt) {
-  var p = players[1];
-  p.pos.y = ball.pos.y - p.size.y / 2;
+  if (!session) {
+    var p = players[1];
+    p.pos.y = ball.pos.y - p.size.y / 2;
+  }
   updateBall(dt);
 }
 
 function updateBall(dt) {
+  if (session && player === 1) {
+    return;
+  }
+
   if (ball.pos.x + ball.size.x < 0) {
     ++players[1].score;
     resetBall();
@@ -139,6 +155,16 @@ function updateCanvas() {
   canvas.height = document.body.clientHeight;
 }
 
+function sendMessage(name, data) {
+  if (connection && connection.OPEN) {
+    connection.send(JSON.stringify({
+      session: session,
+      type: name,
+      data: data,
+    }))
+  }
+}
+
 var canvas = document.getElementsByTagName('canvas')[0];
 var context = canvas.getContext('2d');
 var accumulator = 0;
@@ -152,14 +178,49 @@ var players = [
   new Player(),
 ];
 var ball = new Ball();
+var session;
+var player = 0;
 
 players[0].pos.x = margin.x;
 players[1].pos.x = court.x - (players[1].size.x + margin.x);
 
 resetBall();
 
+var connection = new WebSocket('ws://192.168.1.10:8001');
+connection.addEventListener('error', function(e) {
+  console.error(e);
+});
+connection.addEventListener('open', function(e) {
+  var s = parseInt(window.location.hash[1], 10);
+  if (s) {
+    session = s;
+    sendMessage('join');
+    player = 1;
+  } else {
+    sendMessage('register');
+  }
+});
+connection.addEventListener('message', function(e) {
+  var msg = JSON.parse(e.data);
+  console.log('Received message', msg);
+  if (msg.type === 'session') {
+    session = msg.data;
+    history.replaceState(msg, 'Session', '#' + session);
+  }
+  else if (msg.type === 'pos') {
+    players[1-player].pos.y = msg.data;
+  }
+  else if (msg.type === 'ball') {
+    ball.pos = msg.data;
+  }
+});
+
 document.addEventListener('mousemove', function(e) {
-  players[0].pos.y = (e.clientY / scale.y) - players[0].size.y / 2;
+  p = players[player];
+  p.pos.y = (e.clientY / scale.y) - p.size.y / 2;
+  if (session) {
+    sendMessage('pos', p.pos.y);
+  }
 });
 
 window.addEventListener('resize', updateCanvas);
