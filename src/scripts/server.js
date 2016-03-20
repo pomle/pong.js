@@ -43,6 +43,24 @@ function Player() {
   this.conn = undefined;
 }
 
+function gc() {
+  console.log('Running session gc.')
+  var ps, p, i = 0;
+  for (var id in sessions) {
+    ++i;
+    ps = sessions[id].players;
+    if (connectionClosed(ps[0]) && connectionClosed(ps[1])) {
+      console.log('Cleaning "%s"', id);
+      delete sessions[id];
+    }
+  }
+  console.log('Sessions active: %d', i);
+}
+
+function connectionClosed(p) {
+  return p.conn.readyState === undefined;
+}
+
 function messageHandler(conn, msg) {
   if (msg.type === 'register') {
     let session = new Session();
@@ -98,3 +116,5 @@ function sendMessage(conn, type, data) {
   console.log('Sending message', msg);
   conn.sendText(msg);
 }
+
+setInterval(gc, 15000);
