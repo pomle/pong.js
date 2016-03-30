@@ -94,7 +94,10 @@ function drawSquare(ent) {
   context.fillStyle = '#fff';
   var p = vec2can(ent.pos);
   var s = vec2can(ent.size);
-  context.fillRect(p.x, p.y, s.x, s.y);
+  context.fillRect(Math.floor(p.x),
+                   Math.floor(p.y),
+                   Math.ceil(s.x),
+                   Math.ceil(s.y));
 }
 
 function loop(t) {
