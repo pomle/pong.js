@@ -1,3 +1,5 @@
+'use strict';
+
 function Vec2(x, y) {
   this.x = x;
   this.y = y;
@@ -37,12 +39,55 @@ function vec2can(vec2) {
                     vec2.y * scale.y);
 }
 
+const text = {
+  size: 15,
+  chars: {
+    '0': '111101101101111',
+    '1': '010010010010010',
+    '2': '111001111100111',
+    '3': '111001111001111',
+    '4': '101101111001001',
+    '5': '111100111001111',
+    '6': '111100111101111',
+    '7': '111001001001001',
+    '8': '111101111101111',
+    '9': '111101111001111',
+  },
+};
+
+function drawChar(m, p) {
+  let s = 8;
+  context.fillStyle = '#fff';
+  let c = {
+    pos: new Vec2(0, 0),
+    size: new Vec2(s, s),
+  };
+  for (let i = 0, l = m.length; i !== l; ++i) {
+    if (m[i] === '1') {
+      c.pos.x = p.x + (i % 3) * s;
+      c.pos.y = p.y + Math.floor(i / 3) * s;
+      drawSquare(c);
+    }
+  }
+}
+
 function draw() {
   updateScale();
   context.fillStyle = '#000';
   context.fillRect(0, 0, canvas.width, canvas.height);
+  drawScore();
   players.forEach(drawSquare);
   drawSquare(ball);
+}
+
+function drawScore() {
+  let x = court.x / 3 - text.size / 2;
+  let d = text.size * 4;
+  players.forEach((p, i) => {
+    p.score.toString().split('').forEach((c, j) => {
+      drawChar(text.chars[c], {x: d * j + x + x * i, y: 10});
+    });
+  });
 }
 
 function drawSquare(ent) {
