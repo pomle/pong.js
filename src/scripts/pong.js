@@ -6,9 +6,9 @@ function Vec2(x, y) {
 }
 
 Vec2.prototype.length = function(l) {
-  var cl = Math.sqrt(this.x * this.x + this.y * this.y);
+  let cl = Math.sqrt(this.x * this.x + this.y * this.y);
   if (l) {
-    var s = l / cl;
+    let s = l / cl;
     this.x *= s;
     this.y *= s;
     return;
@@ -92,8 +92,8 @@ function drawScore() {
 
 function drawSquare(ent) {
   context.fillStyle = '#fff';
-  var p = vec2can(ent.pos);
-  var s = vec2can(ent.size);
+  let p = vec2can(ent.pos);
+  let s = vec2can(ent.size);
   context.fillRect(Math.floor(p.x),
                    Math.floor(p.y),
                    Math.ceil(s.x),
@@ -135,7 +135,7 @@ function startBall() {
 }
 
 function update(dt) {
-  var p = players[1];
+  let p = players[1];
   p.pos.y = ball.pos.y - p.size.y / 2;
   updateBall(dt);
 }
@@ -156,13 +156,13 @@ function updateBall(dt) {
   }
 
   if (ball.vel.x > 0) {
-    var p = players[1];
+    let p = players[1];
     if (isBallCaughtY(p, ball) &&
         ball.pos.x + ball.size.x > p.pos.x && ball.pos.x < p.pos.x) {
       returnBall();
     }
   } else if (ball.vel.x < 0) {
-    var p = players[0];
+    let p = players[0];
     if (isBallCaughtY(p, ball) &&
         ball.pos.x < p.pos.x + p.size.x && ball.pos.x > p.pos.x) {
       returnBall();
@@ -187,19 +187,19 @@ function updateCanvas() {
   canvas.height = canvas.width * (court.y / court.x);
 }
 
-var canvas = document.getElementsByTagName('canvas')[0];
-var context = canvas.getContext('2d');
-var accumulator = 0;
-var time = 0;
-var step = 4;
-var court = new Vec2(600, 340);
-var scale = new Vec2(1, 1);
-var margin = new Vec2(20, 0);
-var players = [
+const canvas = document.getElementsByTagName('canvas')[0];
+const context = canvas.getContext('2d');
+const court = new Vec2(600, 340);
+const scale = new Vec2(1, 1);
+const margin = new Vec2(20, 0);
+const players = [
   new Player(),
   new Player(),
 ];
-var ball = new Ball();
+const ball = new Ball();
+let accumulator = 0;
+let time = 0;
+let step = 4;
 
 players[0].pos.x = margin.x;
 players[1].pos.x = court.x - (players[1].size.x + margin.x);
