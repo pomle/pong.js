@@ -18,8 +18,6 @@ let html = fs.readFileSync(SRC_DIR + '/prod.html', 'utf8');
 let css = fs.readFileSync(SRC_DIR + '/css/pong.css', 'utf8');
 let js = fs.readFileSync(SRC_DIR + '/scripts/pong.js');
 
-let server = fs.readFileSync(SRC_DIR + '/scripts/server.js');
-
 html = html.replace('{{CSS}}', css);
 html = html.replace('{{JS}}', js);
 
@@ -32,5 +30,4 @@ html = htmlMinify(html, {
   minifyJS: true,
 });
 
-fs.writeFileSync(BUILD_DIR + '/server.js', server);
 fs.writeFileSync(BUILD_DIR + '/public/index.html', html);
